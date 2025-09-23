@@ -10,9 +10,9 @@ class Report {
   final String registrationIp;
   final String userAgent;
   final DateTime creationDate;
-  final String lastModifiedIp;
-  final String lastModifiedUserAgent;
-  final DateTime lastModifiedDate;
+  final String? lastModifiedIp; // 👈 ahora opcional
+  final String? lastModifiedUserAgent; // 👈 ahora opcional
+  final DateTime? lastModifiedDate; // 👈 ahora opcional
 
   Report({
     required this.id,
@@ -26,8 +26,8 @@ class Report {
     required this.registrationIp,
     required this.userAgent,
     required this.creationDate,
-    required this.lastModifiedIp,
-    required this.lastModifiedUserAgent,
-    required this.lastModifiedDate,
+    this.lastModifiedIp,
+    this.lastModifiedUserAgent,
+    this.lastModifiedDate,
   });
 }
