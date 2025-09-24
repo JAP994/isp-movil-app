@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:isp/domain/datasources/reports_datasource.dart';
 import 'package:isp/domain/entities/report.dart';
@@ -8,7 +9,6 @@ class ReportdbDatasource extends ReportsDatasource {
   final dio = Dio(
     BaseOptions(
       baseUrl: 'https://springboot-app-9i67.onrender.com/sistem/api/v1/reports',
-      // baseUrl: 'http://localhost:8080/sistem/api/v1/reports',
     ),
   );
 
@@ -18,15 +18,37 @@ class ReportdbDatasource extends ReportsDatasource {
       '',
       queryParameters: {'page': page, 'size': size},
     );
-
     final data = response.data['content'] as List<dynamic>;
-    final List<Report> reports = data
+    return data
         .map(
           (json) =>
               ReportMapper.reportDBToEntity(ReportDbResponse.fromJson(json)),
         )
         .toList();
+  }
 
-    return reports;
+  @override
+  Future<Report> createReport({
+    required File file,
+    required String detectedDateTime,
+    required String detectedLocationUnit,
+    required String involvedMaterialPersonnel,
+    required String detailedDescription,
+  }) async {
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        file.path,
+        filename: file.path.split('/').last,
+      ),
+      'detectedDateTime': detectedDateTime,
+      'detectedLocationUnit': detectedLocationUnit,
+      'involvedMaterialPersonnel': involvedMaterialPersonnel,
+      'detailedDescription': detailedDescription,
+    });
+
+    final response = await dio.post('/upload', data: formData);
+    return ReportMapper.reportDBToEntity(
+      ReportDbResponse.fromJson(response.data),
+    );
   }
 }

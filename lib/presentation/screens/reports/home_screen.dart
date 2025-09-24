@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isp/presentation/providers/providers.dart';
+import 'package:isp/presentation/screens/screens.dart'; // Exporta PostScreen
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatelessWidget {
   static const name = 'home-screen';
@@ -44,6 +46,17 @@ class _HomeViewState extends ConsumerState<_HomeView> {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.pushNamed(PostScreen.name).then((_) {
+            // Refrescar reportes al regresar
+            ref.read(getReportsProvider.notifier).reset();
+            ref.read(getReportsProvider.notifier).loadNextPage();
+          });
+        },
+        tooltip: 'Nuevo reporte',
+        child: const Icon(Icons.add),
       ),
     );
   }
