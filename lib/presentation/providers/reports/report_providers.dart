@@ -9,15 +9,35 @@ final getReportsProvider = StateNotifierProvider<ReportsNotifier, List<Report>>(
   },
 );
 
-typedef ReportCallback = Future<List<Report>> Function();
+typedef ReportCallback = Future<List<Report>> Function({int page, int size});
 
 class ReportsNotifier extends StateNotifier<List<Report>> {
-  ReportCallback fetchMoreReports;
+  final ReportCallback fetchMoreReports;
+  int _currentPage = 0;
+  final int _pageSize = 10;
+  bool _hasMore = true;
 
   ReportsNotifier({required this.fetchMoreReports}) : super([]);
 
   Future<void> loadNextPage() async {
-    final List<Report> reports = await fetchMoreReports();
+    if (!_hasMore) return;
+
+    final List<Report> reports = await fetchMoreReports(
+      page: _currentPage,
+      size: _pageSize,
+    );
+
+    if (reports.length < _pageSize) {
+      _hasMore = false;
+    }
+
+    _currentPage++;
     state = [...state, ...reports];
+  }
+
+  void reset() {
+    _currentPage = 0;
+    _hasMore = true;
+    state = [];
   }
 }

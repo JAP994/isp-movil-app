@@ -1,5 +1,6 @@
 import 'package:isp/domain/entities/report.dart';
 
 abstract class ReportsDatasource {
-  Future<List<Report>> getReports();
+  // Agregamos parámetros opcionales para paginación
+  Future<List<Report>> getReports({int page = 0, int size = 10});
 }

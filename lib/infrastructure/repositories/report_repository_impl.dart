@@ -6,8 +6,7 @@ class ReportRepositoryImpl extends ReportsRepository {
   final ReportsDatasource datasource;
   ReportRepositoryImpl({required this.datasource});
 
-  @override
-  Future<List<Report>> getReports() {
-    return datasource.getReports();
+  Future<List<Report>> getReports({int page = 0, int size = 10}) {
+    return datasource.getReports(page: page, size: size);
   }
 }
