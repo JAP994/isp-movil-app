@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isp/presentation/providers/providers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:isp/presentation/screens/reports/widgets/upper_case_text_form_field.dart';
 
 class PostScreen extends ConsumerStatefulWidget {
   static const name = 'post-screen';
@@ -150,7 +151,7 @@ class _PostScreenState extends ConsumerState<PostScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Reporte creado correctamente',
+            'Informe enviado correctamente',
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -190,7 +191,7 @@ class _PostScreenState extends ConsumerState<PostScreen> {
     final isLoading = ref.watch(createReportProvider).isLoading;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Nuevo Reporte')),
+      appBar: AppBar(title: const Text('Registrar ISP'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -205,7 +206,7 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                     child: TextFormField(
                       controller: _detectedDateTimeController,
                       decoration: InputDecoration(
-                        labelText: 'Fecha y hora detectada (dd/MM/yyyy HH:mm)',
+                        labelText: 'Fecha y hora detectada',
                         suffixIcon: const Icon(Icons.calendar_today),
                       ),
                       validator: (value) {
@@ -231,13 +232,15 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: _detectedLocationUnitController,
-                  decoration: const InputDecoration(
-                    labelText: 'Unidad detectada',
-                  ),
+                  decoration: const InputDecoration(labelText: 'Reparto'),
+                  inputFormatters: [
+                    UpperCaseTextFormatter(), // 👈 convierte todo a mayúsculas
+                  ],
                   validator: (value) => value == null || value.isEmpty
                       ? 'Campo obligatorio'
                       : null,
                 ),
+
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: _involvedMaterialPersonnelController,
@@ -311,7 +314,7 @@ class _PostScreenState extends ConsumerState<PostScreen> {
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
                         onPressed: _submit,
-                        child: const Text('Enviar reporte'),
+                        child: const Text('Enviar ISP'),
                       ),
               ],
             ),

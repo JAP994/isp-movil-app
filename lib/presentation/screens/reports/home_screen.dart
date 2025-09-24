@@ -25,6 +25,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
   @override
   void initState() {
     super.initState();
+    // Cargar la primera página de reportes
     ref.read(getReportsProvider.notifier).loadNextPage();
   }
 
@@ -33,20 +34,25 @@ class _HomeViewState extends ConsumerState<_HomeView> {
     final getReports = ref.watch(getReportsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Reportes")),
-      body: ListView.builder(
-        itemCount: getReports.length,
-        itemBuilder: (context, index) {
-          final report = getReports[index];
-          return Card(
-            child: ListTile(
-              title: Text(report.reportNumber),
-              subtitle: Text(report.detectedLocationUnit),
-              trailing: const Icon(Icons.chevron_right),
+      appBar: AppBar(title: const Text("Informes Situación de Peligro")),
+      body: getReports.isEmpty
+          ? const Center(
+              child:
+                  CircularProgressIndicator(), // Mostramos spinner mientras carga
+            )
+          : ListView.builder(
+              itemCount: getReports.length,
+              itemBuilder: (context, index) {
+                final report = getReports[index];
+                return Card(
+                  child: ListTile(
+                    title: Text(report.reportNumber),
+                    subtitle: Text(report.detectedLocationUnit),
+                    trailing: const Icon(Icons.chevron_right),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.pushNamed(PostScreen.name).then((_) {
